@@ -152,6 +152,10 @@ const (
 	EnvK8sClientMaxIdleConnections = "ARGOCD_K8S_CLIENT_MAX_IDLE_CONNECTIONS"
 	// EnvGnuPGHome is the path to ArgoCD's GnuPG keyring for signature verification
 	EnvGnuPGHome = "ARGOCD_GNUPGHOME"
+	// EnvControllerReplicas is the number of controller replicas
+	EnvControllerReplicas = "ARGOCD_CONTROLLER_REPLICAS"
+	// EnvControllerShard is the shard number that should be handled by controller
+	EnvControllerShard = "ARGOCD_CONTROLLER_SHARD"
 )
 
 const (
