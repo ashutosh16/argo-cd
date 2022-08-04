@@ -682,11 +682,27 @@ func (o SyncOptions) RemoveOption(option string) SyncOptions {
 // HasOption returns true if the list of sync options contains given option
 func (o SyncOptions) HasOption(option string) bool {
 	for _, i := range o {
-		if option == i {
-			return true
+		s := strings.Split(i, ",")
+		for _, val := range s {
+			if option == val {
+				return true
+			}
 		}
 	}
 	return false
+}
+
+// GetSyncOption returns string if the list of sync options contains given sync option
+func (o SyncOptions) GetSyncOption(option string) string {
+	for _, i := range o {
+		s := strings.Split(i, ",")
+		for _, val := range s {
+			if option == val {
+				return i
+			}
+		}
+	}
+	return ""
 }
 
 // SyncPolicy controls when a sync will be performed in response to updates in git

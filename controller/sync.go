@@ -4,11 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"os"
-	"strconv"
-	"sync/atomic"
-	"time"
-
 	"github.com/argoproj/gitops-engine/pkg/sync"
 	"github.com/argoproj/gitops-engine/pkg/sync/common"
 	"github.com/argoproj/gitops-engine/pkg/utils/kube"
@@ -19,6 +14,11 @@ import (
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/util/managedfields"
 	"k8s.io/kubectl/pkg/util/openapi"
+	"os"
+	"strconv"
+	"strings"
+	"sync/atomic"
+	"time"
 
 	cdcommon "github.com/argoproj/argo-cd/v2/common"
 	"github.com/argoproj/argo-cd/v2/controller/metrics"
@@ -231,11 +231,26 @@ func (m *appStateManager) SyncAppState(app *v1alpha1.Application, state *v1alpha
 		}),
 		sync.WithManifestValidation(!syncOp.SyncOptions.HasOption(common.SyncOptionsDisableValidation)),
 		sync.WithNamespaceCreation(syncOp.SyncOptions.HasOption("CreateNamespace=true"), func(un *unstructured.Unstructured) bool {
+			if un == nil {
+				return false
+			}
+			s := syncOp.SyncOptions.GetSyncOption("CreateNamespace=true")
+			a := make(map[string]string)
+			t := strings.Split(s, ",")
+			for _, val := range t {
+				if val != "CreateNamespace=true" {
+					s := strings.Split(string(val), "=")
+					a[s[0]] = s[1]
+				}
+			}
+			if len(a) != 0 {
+				un.SetAnnotations(a)
+			}
+
 			if un != nil && kube.GetAppInstanceLabel(un, cdcommon.LabelKeyAppInstance) != "" {
 				kube.UnsetLabel(un, cdcommon.LabelKeyAppInstance)
-				return true
 			}
-			return false
+			return true
 		}),
 		sync.WithSyncWaveHook(delayBetweenSyncWaves),
 		sync.WithPruneLast(syncOp.SyncOptions.HasOption(common.SyncOptionPruneLast)),
