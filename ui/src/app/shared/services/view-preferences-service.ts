@@ -32,6 +32,8 @@ export interface AppDetailsPreferences {
 export interface PodViewPreferences {
     sortMode: PodGroupType;
     hideUnschedulable: boolean;
+    showPodHealthIcons:boolean;
+
 }
 
 export interface HealthStatusBarPreferences {
@@ -93,6 +95,8 @@ export interface ViewPreferences {
     hideSidebar: boolean;
     position: string;
     theme: string;
+
+
 }
 
 const VIEW_PREFERENCES_KEY = 'view_preferences';
@@ -112,7 +116,8 @@ const DEFAULT_PREFERENCES: ViewPreferences = {
         orphanedResources: false,
         podView: {
             sortMode: 'node',
-            hideUnschedulable: true
+            hideUnschedulable: true,
+            showPodHealthIcons: true
         },
         darkMode: false,
         followLogs: false,
@@ -140,6 +145,7 @@ const DEFAULT_PREFERENCES: ViewPreferences = {
     hideSidebar: true,
     position: '',
     theme: 'light'
+
 };
 
 export class ViewPreferencesService {
