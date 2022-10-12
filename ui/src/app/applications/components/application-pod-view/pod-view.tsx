@@ -59,7 +59,7 @@ export class PodView extends React.Component<PodViewProps> {
         apis: PropTypes.object
     };
 
-    private togglePodsIconView(appDetails: AppDetailsPreferences) {
+    private switchToCountView(appDetails: AppDetailsPreferences) {
         services.viewPreferences.updatePreferences({
             appDetails: {
                 ...appDetails,
@@ -208,7 +208,7 @@ export class PodView extends React.Component<PodViewProps> {
                                                         </div>
                                                         {(
                                                             <div className='pod-view__node__label'>
-                                                            <a  onClick={() => this.togglePodsIconView(prefs.appDetails)} >
+                                                            <a  onClick={() => this.switchToCountView(prefs.appDetails)} >
                                                                Switch to {podPrefs.showPodHealthIcons? 'pods count view' : 'Pods view'}
                                                             </a>
                                                                 <HelpIcon title={ podPrefs.showPodHealthIcons? 'Click to view pods count by health status': 'Click to view full pods list'}/>
