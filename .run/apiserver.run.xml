@@ -1,0 +1,15 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="apiserver" type="GoApplicationRunConfiguration" factoryName="Go Application" singleton="false">
+    <module name="argo-cd" />
+    <working_directory value="$PROJECT_DIR$" />
+    <parameters value=" --disable-auth='true'  --loglevel debug --redis localhost:6379  --port 8080  --repo-server localhost:-8081 --port 8080 --application-namespaces=argocd" />
+    <envs>
+      <env name="ARGOCD_BINARY_NAME" value="argocd-server" />
+    </envs>
+    <kind value="FILE" />
+    <package value="github.com/argoproj/argo-cd/v2" />
+    <directory value="$PROJECT_DIR$" />
+    <filePath value="$PROJECT_DIR$/cmd/main.go" />
+    <method v="2" />
+  </configuration>
+</component>

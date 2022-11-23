@@ -529,6 +529,28 @@ func (m *appStateManager) CompareAppState(app *v1alpha1.Application, project *ap
 			resState.SyncWave = int64(syncwaves.Wave(targetObj))
 		}
 
+		rkey := kubeutil.ResourceKey{
+			Namespace: obj.GetNamespace(),
+			Name:      obj.GetName(),
+			Kind:      gvk.Kind,
+			Group:     gvk.Group,
+		}
+
+		for i, res := range app.Status.Resources {
+
+			akey := kubeutil.ResourceKey{
+				Group:     res.Group,
+				Kind:      res.Kind,
+				Namespace: res.Namespace,
+				Name:      res.Name,
+			}
+
+			if akey == rkey {
+				resState.Revision = app.Status.Resources[i].Revision
+			}
+
+		}
+
 		var diffResult diff.DiffResult
 		if i < len(diffResults.Diffs) {
 			diffResult = diffResults.Diffs[i]
@@ -663,6 +685,42 @@ func (m *appStateManager) persistRevisionHistory(app *v1alpha1.Application, revi
 	}
 	_, err = m.appclientset.ArgoprojV1alpha1().Applications(app.Namespace).Patch(context.Background(), app.Name, types.MergePatchType, patch, metav1.PatchOptions{})
 	return err
+}
+
+func (m *appStateManager) persistResourceRevision(app *appv1.Application, revision string, newRevision map[kubeutil.ResourceKey]string) error {
+
+	for i, res := range app.Status.Resources {
+
+		rkey := kubeutil.ResourceKey{
+			Group:     res.Group,
+			Kind:      res.Kind,
+			Namespace: res.Namespace,
+			Name:      res.Name,
+		}
+		if res.Revision == "" {
+			res.Revision = revision
+			continue
+		}
+		if revs, ok := newRevision[rkey]; ok {
+			res.Revision = revs
+
+		}
+
+		app.Status.Resources[i] = res
+	}
+
+	patch, err := json.Marshal(map[string]map[string][]v1alpha1.ResourceStatus{
+		"status": {
+			"resources": app.Status.Resources,
+		},
+	})
+
+	if err != nil {
+		return err
+	}
+	_, err = m.appclientset.ArgoprojV1alpha1().Applications(app.Namespace).Patch(context.Background(), app.Name, types.MergePatchType, patch, metav1.PatchOptions{})
+	return err
+
 }
 
 // NewAppStateManager creates new instance of AppStateManager

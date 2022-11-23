@@ -62,6 +62,18 @@ export const ApplicationNodeInfo = (props: {
             attributes.push({title: 'REPLICAS', value: `${props.live.spec?.replicas || 0}/${props.live.status?.readyReplicas || 0}/${props.live.spec?.replicas || 0}`});
         }
     }
+    if ((props.application.status.resources || []).length) {
+        attributes.push({
+            title: 'Revision',
+            value: (
+                <div className='application-node-info__labels'>
+                    {(props.application.status.resources.filter(res => (res.name = props.node.name)) || []).map(revision => (
+                        <span className='application-node-info__label' >{revision}</span>
+                    ))}
+                </div>
+            )
+        });
+    }
 
     if (props.controlled) {
         if (!props.controlled.summary.hook) {

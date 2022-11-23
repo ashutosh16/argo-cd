@@ -1853,6 +1853,8 @@ spec:
                       type: string
                     requiresPruning:
                       type: boolean
+                    revision:
+                      type: string
                     status:
                       description: SyncStatusCode is a type which represents possible
                         comparison results

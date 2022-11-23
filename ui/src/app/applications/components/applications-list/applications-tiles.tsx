@@ -8,7 +8,9 @@ import * as models from '../../../shared/models';
 import {ApplicationURLs} from '../application-urls';
 import * as AppUtils from '../utils';
 import {OperationState} from '../utils';
-import {services} from '../../../shared/services';
+import {services, ViewPreferences} from '../../../shared/services';
+import {combineLatest} from "rxjs";
+import {map} from "rxjs/operators";
 
 import './applications-tiles.scss';
 
@@ -101,8 +103,18 @@ export const ApplicationTiles = ({applications, syncApplication, refreshApplicat
     return (
         <Consumer>
             {ctx => (
-                <DataLoader load={() => services.viewPreferences.getPreferences()}>
-                    {pref => {
+                <DataLoader
+                    load={() =>
+                        combineLatest([services.authService.settings(), services.viewPreferences.getPreferences()]).pipe(
+                            map(items => {
+                                return {
+                                    url: items[0].uiBannerURL,
+                                    pref: items[1],
+                                };
+                            })
+                        )
+                    }>
+                    {({url, pref}: {content: string; url: string; pref: ViewPreferences}) => {
                         const favList = pref.appList.favoritesAppList || [];
                         return (
                             <div

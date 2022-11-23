@@ -293,7 +293,11 @@ export const ApplicationSummary = (props: ApplicationSummaryProps) => {
                     <HealthStatusIcon state={app.status.health} /> {app.status.health.status}
                 </span>
             )
-        }
+        },
+        {
+            title: 'Revision',
+            view: formatCreationTimestamp(app.metadata.creationTimestamp)
+        },
     ];
 
     const urls = app.status.summary.externalURLs || [];
