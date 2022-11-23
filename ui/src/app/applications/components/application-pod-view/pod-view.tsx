@@ -371,7 +371,7 @@ export class PodView extends React.Component<PodViewProps> {
     renderPodsViews(pods: Pod[], showPodHealthIcons: boolean) {
         return pods.length !== 0 && !showPodHealthIcons ? (
             <span>
-                <div style={{cursor:'none'}} className={`pod-view__node__pod pod-view__node__pod--${pods[0].health.toLowerCase()}`}>
+                <div style={{cursor: 'none'}} className={`pod-view__node__pod pod-view__node__pod--${pods[0].health.toLowerCase()}`}>
                     <PodHealthIcon state={{status: pods[0].health, message: pods[0].health}} />
                 </div>
                 <div className='pod-view__node__label--large'>
@@ -516,7 +516,7 @@ function renderStats(info: HostResourceInfo) {
                 content={
                     <React.Fragment>
                         <div>{info.resourceName.toUpperCase()}:</div>
-                        <div className='pod-view__node__pod__stat-tooltip'>t
+                        <div className='pod-view__node__pod__stat-tooltip'>
                             <div>Requests:</div>
                             <div>
                                 {' '}
