@@ -162,6 +162,14 @@ export class PodView extends React.Component<PodViewProps> {
                                                         </div>
                                                     )}
                                                 </div>
+                                                {
+                                                    <div className='pod-view__node__label'>
+                                                        <a onClick={() => this.switchToPodsCountView(prefs.appDetails)}>
+                                                            Switch to {podPrefs.showPodHealth ? 'pods count view' : 'Pods view'}
+                                                        </a>
+                                                        <HelpIcon title={podPrefs.showPodHealth ? 'Click to view pods count by health status' : 'Click to view full pods list'} />
+                                                    </div>
+                                                }
                                                 <div className='pod-view__node__container'>
                                                     {(group.hostResourcesInfo || []).length > 0 && (
                                                         <div className='pod-view__node__container pod-view__node__container--stats'>
@@ -188,16 +196,6 @@ export class PodView extends React.Component<PodViewProps> {
                                                                 podPrefs.showPodHealth
                                                             )}
                                                         </div>
-                                                        {
-                                                            <div className='pod-view__node__label'>
-                                                                <a onClick={() => this.switchToPodsCountView(prefs.appDetails)}>
-                                                                    Switch to {podPrefs.showPodHealth ? 'pods count view' : 'Pods view'}
-                                                                </a>
-                                                                <HelpIcon
-                                                                    title={podPrefs.showPodHealth ? 'Click to view pods count by health status' : 'Click to view full pods list'}
-                                                                />
-                                                            </div>
-                                                        }
                                                         {(podPrefs.sortMode === 'parentResource' || podPrefs.sortMode === 'topLevelResource') && (
                                                             <div key={group.uid}>{group.renderQuickStarts()}</div>
                                                         )}
@@ -371,11 +369,11 @@ export class PodView extends React.Component<PodViewProps> {
     renderPodsViews(pods: Pod[], showPodHealthIcons: boolean) {
         return pods.length !== 0 && !showPodHealthIcons ? (
             <span>
-                <div style={{cursor:'none'}} className={`pod-view__node__pod pod-view__node__pod--${pods[0].health.toLowerCase()}`}>
+                <div style={{cursor: 'none'}} className={`pod-view__node__pod pod-view__node__pod--${pods[0].health.toLowerCase()}`}>
                     <PodHealthIcon state={{status: pods[0].health, message: pods[0].health}} />
                 </div>
                 <div className='pod-view__node__label--large'>
-                    {pods.length} {pods[0].health} pods{' '}
+                    {pods.length} {pods[0].health} Pod{pods.length > 1 ? `s` : ''}
                 </div>
             </span>
         ) : (
@@ -516,8 +514,8 @@ function renderStats(info: HostResourceInfo) {
                 content={
                     <React.Fragment>
                         <div>{info.resourceName.toUpperCase()}:</div>
-                        <div className='pod-view__node__pod__stat-tooltip'>t
-                            <div>Requests:</div>
+                        <div className='pod-view__node__pod__stat-tooltip'>
+                            t<div>Requests:</div>
                             <div>
                                 {' '}
                                 <i className='pod-view__node__pod__stat-icon-app' /> {formatMetric(info.resourceName, info.requestedByApp)} (App)
