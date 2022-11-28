@@ -515,7 +515,7 @@ function renderStats(info: HostResourceInfo) {
                     <React.Fragment>
                         <div>{info.resourceName.toUpperCase()}:</div>
                         <div className='pod-view__node__pod__stat-tooltip'>
-                            t<div>Requests:</div>
+                            <div>Requests:</div>
                             <div>
                                 {' '}
                                 <i className='pod-view__node__pod__stat-icon-app' /> {formatMetric(info.resourceName, info.requestedByApp)} (App)
