@@ -158,3 +158,67 @@ Below is an example of an extension using the flyout widget:
   );
 })(window);
 ```
+
+## TopBar Extensions
+
+The top bar panel is the action menu at the top of the application view where the action buttons are displayed like Details, Sync, Refresh. Argo CD allows you to add new react component, preferably button type.
+to the end of the ActionMenu buttons. The extension should be registered using the `extensionsAPI.registerTopBarExtension` method:
+
+```typescript
+registerTopBarExtension(component: StatusPanelExtensionComponent, title: string, id: string, flyout?: ExtensionComponent, isMiddle: boolean, isNarrow: boolean)
+```
+
+Below is an example of a simple extension:
+
+```typescript
+((window) => {
+  const component = () => {
+    return React.createElement(
+      "div",
+      { style: { padding: "10px" } },
+      "Hello World"
+    );
+  };
+  window.extensionsAPI.registerTopBarExtension(
+    component,
+    "My Extension",
+    "my_extension"
+  );
+})(window);
+```
+
+### Flyout widget
+
+It is also possible to add an optional flyout widget to your extension. It can be opened by calling `openFlyout()` from your extension's component. Your flyout component will then be rendered in a sliding panel, similar to the panel that opens when clicking on `History and rollback`.
+
+Below is an example of an extension using the flyout widget:
+
+```typescript
+((window) => {
+  const component = (props: {
+      openFlyout: () => any
+    }) => {
+    return React.createElement(
+      "div",
+      { 
+        style: { padding: "10px" },
+        onClick: () => props.openFlyout()
+      },
+      "Hello World"
+    );
+  };
+  const flyout = () => {
+    return React.createElement(
+      "div",
+      { style: { padding: "10px" } },
+      "This is a flyout"
+    );
+  };
+  window.extensionsAPI.registerTopBarExtension(
+    component,
+    "My Extension",
+    "my_extension",
+    flyout
+  );
+})(window);
+```
