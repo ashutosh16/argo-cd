@@ -551,10 +551,10 @@ argocd admin settings resource-overrides action list /tmp/deploy.yaml --argocd-c
 				}
 
 				luaVM := lua.VM{ResourceOverrides: overrides}
-				discoveryScript, err := luaVM.GetResourceActionDiscovery(&res)
+				discoveryScripts, err := luaVM.GetResourceActionDiscovery(&res)
 				errors.CheckError(err)
 
-				availableActions, err := luaVM.ExecuteResourceActionDiscovery(&res, discoveryScript)
+				availableActions, err := luaVM.ExecuteResourceActionDiscovery(&res, discoveryScripts)
 				errors.CheckError(err)
 				sort.Slice(availableActions, func(i, j int) bool {
 					return availableActions[i].Name < availableActions[j].Name

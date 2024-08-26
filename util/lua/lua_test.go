@@ -354,11 +354,15 @@ a = {scale = scale, resume = resume, test = test}
 
 return a
 `
-
+const additionalValidDiscoveryLua = `
+custom = {name = 'custom'}
+a = {custom = custom}
+return a
+`
 func TestExecuteResourceActionDiscovery(t *testing.T) {
 	testObj := StrToUnstructured(objJSON)
 	vm := VM{}
-	actions, err := vm.ExecuteResourceActionDiscovery(testObj, validDiscoveryLua)
+	actions, err := vm.ExecuteResourceActionDiscovery(testObj, []string{validDiscoveryLua, additionalValidDiscoveryLua})
 	require.NoError(t, err)
 	expectedActions := []appv1.ResourceAction{
 		{
@@ -372,6 +376,10 @@ func TestExecuteResourceActionDiscovery(t *testing.T) {
 		}, {
 			Name: "test",
 		},
+		{
+			Name: "custom",
+		},
+
 	}
 	for _, expectedAction := range expectedActions {
 		assert.Contains(t, actions, expectedAction)
@@ -386,7 +394,7 @@ return a`
 func TestExecuteResourceActionDiscoveryInvalidResourceAction(t *testing.T) {
 	testObj := StrToUnstructured(objJSON)
 	vm := VM{}
-	actions, err := vm.ExecuteResourceActionDiscovery(testObj, discoveryLuaWithInvalidResourceAction)
+	actions, err := vm.ExecuteResourceActionDiscovery(testObj, []string{discoveryLuaWithInvalidResourceAction, additionalValidDiscoveryLua})
 	require.Error(t, err)
 	assert.Nil(t, actions)
 }
@@ -399,7 +407,8 @@ return a
 func TestExecuteResourceActionDiscoveryInvalidReturn(t *testing.T) {
 	testObj := StrToUnstructured(objJSON)
 	vm := VM{}
-	actions, err := vm.ExecuteResourceActionDiscovery(testObj, invalidDiscoveryLua)
+	actions, err := vm.ExecuteResourceActionDiscovery(testObj, []string{invalidDiscoveryLua})
+
 	assert.Nil(t, actions)
 	require.Error(t, err)
 }
